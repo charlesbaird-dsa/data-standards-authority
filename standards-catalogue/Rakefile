@@ -20,12 +20,11 @@ task :publish do
   publish_dir = ENV.fetch("CLONED_GH_PAGES_DIR") do
     tmp_dir = Dir.mktmpdir("publish")
     repo_url = `git config --get remote.origin.url`.chomp
-    print repo_url
     sh("git clone --single-branch --branch gh-pages #{repo_url} #{tmp_dir}")
     tmp_dir
   end
 
-  sh("rsync -a --delete --exclude .git --exclude CNAME who#{publish_dir}")
+  sh("rsync -a --delete --exclude .git --exclude CNAME data-standards-catalogue/build/standards-catalogue/ #{publish_dir}")
   sh("git -C #{publish_dir} add --all")
   sh("git -C #{publish_dir} commit -m 'Publish #{rev}'") do |ok, _|
     if ok
